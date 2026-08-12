@@ -19,9 +19,6 @@ namespace StudentBudgetTracker
 
         private void WireUpEvents()
         {
-            button1.Click += new EventHandler(button1_Click);
-            button3.Click += new EventHandler(button3_Click);
-            linkLabel1.LinkClicked += new LinkLabelLinkClickedEventHandler(linkLabel1_LinkClicked);
             this.FormClosing += SignupPage_FormClosing;
         }
 

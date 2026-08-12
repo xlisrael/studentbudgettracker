@@ -11,13 +11,6 @@ namespace StudentBudgetTracker
         public Form1()
         {
             InitializeComponent();
-            WireUpEvents();
-        }
-
-        private void WireUpEvents()
-        {
-            button1.Click += new EventHandler(button1_Click);
-            //linkLabel1.LinkClicked += new LinkLabelLinkClickedEventHandler(linkLabel1_LinkClicked);
         }
 
         private void button1_Click(object sender, EventArgs e)

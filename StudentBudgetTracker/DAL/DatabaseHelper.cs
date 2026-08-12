@@ -269,7 +269,7 @@ namespace StudentBudgetTracker.DAL
                                 UserId = (int)reader["UserId"],
                                 CategoryId = (int)reader["CategoryId"],
                                 Amount = (decimal)reader["Amount"],
-                                ExpenseDate = reader["ExpenseDate"].ToString(),
+                                ExpenseDate = Convert.ToDateTime(reader["ExpenseDate"]).ToString("yyyy-MM-dd"),
                                 Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : "",
                                 IsRecurring = (bool)reader["IsRecurring"],
                                 RecurringId = reader["RecurringId"] != DBNull.Value ? (int?)reader["RecurringId"] : null,
@@ -457,7 +457,7 @@ namespace StudentBudgetTracker.DAL
                                 GoalName = reader["GoalName"].ToString(),
                                 TargetAmount = (decimal)reader["TargetAmount"],
                                 CurrentAmount = (decimal)reader["CurrentAmount"],
-                                Deadline = reader["Deadline"] != DBNull.Value ? reader["Deadline"].ToString() : "",
+                                Deadline = reader["Deadline"] != DBNull.Value ? Convert.ToDateTime(reader["Deadline"]).ToString("yyyy-MM-dd") : "",
                                 CreatedAt = (DateTime)reader["CreatedAt"]
                             });
                         }
@@ -524,8 +524,8 @@ namespace StudentBudgetTracker.DAL
                                 CategoryId = (int)reader["CategoryId"],
                                 Amount = (decimal)reader["Amount"],
                                 Frequency = reader["Frequency"].ToString(),
-                                StartDate = reader["StartDate"].ToString(),
-                                LastProcessed = reader["LastProcessed"] != DBNull.Value ? reader["LastProcessed"].ToString() : "",
+                                StartDate = Convert.ToDateTime(reader["StartDate"]).ToString("yyyy-MM-dd"),
+                                LastProcessed = reader["LastProcessed"] != DBNull.Value ? Convert.ToDateTime(reader["LastProcessed"]).ToString("yyyy-MM-dd") : "",
                                 IsActive = (bool)reader["IsActive"],
                                 CategoryName = reader["CategoryName"].ToString()
                             });
@@ -543,6 +543,21 @@ namespace StudentBudgetTracker.DAL
                 string sql = "DELETE FROM RecurringExpenses WHERE RecurringId = @RecurringId";
                 using (var cmd = new SqlCommand(sql, conn))
                 {
+                    cmd.Parameters.AddWithValue("@RecurringId", recurringId);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateRecurringLastProcessed(int recurringId, string date)
+        {
+            using (var conn = GetConnection())
+            {
+                string sql = "UPDATE RecurringExpenses SET LastProcessed = @LastProcessed WHERE RecurringId = @RecurringId";
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@LastProcessed", date);
                     cmd.Parameters.AddWithValue("@RecurringId", recurringId);
                     conn.Open();
                     cmd.ExecuteNonQuery();

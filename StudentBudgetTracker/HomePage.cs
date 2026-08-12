@@ -18,6 +18,13 @@ namespace StudentBudgetTracker
         private User _currentUser;
         private BudgetSetting _budget;
         private List<Expense> _expenses;
+        private ListView lstExpenses;
+        private ListView lstGoals;
+        private ListView lstRecurring;
+        private Button btnDeleteExpense;
+        private Button btnDeleteGoal;
+        private Button btnDeleteRecurring;
+        private Timer _recurringTimer;
 
         // ============================================================
         // 2. CONSTRUCTOR
@@ -35,24 +42,30 @@ namespace StudentBudgetTracker
                 return;
             }
 
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            BuildListPanels();
             LoadDashboard();
             LoadCategories();
             LoadExpensesAndUpdateCharts();
-            WireUpEvents();
-        }
+            ProcessRecurringExpenses();
+            RefreshExpenseList();
+            RefreshGoalsList();
+            RefreshRecurringList();
+            CheckLimitAlerts();
 
-        // ============================================================
-        // 3. WIRE UP EVENTS
-        // ============================================================
-        private void WireUpEvents()
-        {
-            button3.Click += button3_Click;
-            button4.Click += button4_Click;
-            button7.Click += button7_Click;
-            button5.Click += button5_Click;
-            button6.Click += button6_Click;
-            button1.Click += button1_Click;
-            button2.Click += button2_Click;
+            // Process recurring expenses every hour (matches the web app)
+            _recurringTimer = new Timer();
+            _recurringTimer.Interval = 3600000;
+            _recurringTimer.Tick += (s, ev) => ProcessRecurringExpenses();
+            _recurringTimer.Start();
+            this.FormClosing += (s, ev) =>
+            {
+                if (_recurringTimer != null)
+                {
+                    _recurringTimer.Stop();
+                    _recurringTimer.Dispose();
+                }
+            };
         }
 
         // ============================================================
@@ -87,15 +100,83 @@ namespace StudentBudgetTracker
                 decimal weekTotal = _db.GetWeekTotal(_currentUser.UserId);
                 decimal monthTotal = _db.GetMonthTotal(_currentUser.UserId);
                 decimal remaining = _budget != null ? _budget.MonthlyIncome - monthTotal : 0;
+                string symbol = GetCurrencySymbol(_budget != null ? _budget.Currency : "USD");
 
-                label14.Text = $"${todayTotal:F2}";
-                label18.Text = $"${weekTotal:F2}";
-                label20.Text = $"${monthTotal:F2}";
-                label19.Text = $"${remaining:F2}";
+                label16.Text = $"{symbol}{todayTotal:F2}";
+                label15.Text = $"{symbol}{weekTotal:F2}";
+                label17.Text = $"{symbol}{monthTotal:F2}";
+                label21.Text = $"{symbol}{remaining:F2}";
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Summary error: {ex.Message}");
+            }
+        }
+
+        private string GetCurrencySymbol(string currency)
+        {
+            switch (currency)
+            {
+                case "NGN": return "₦";
+                case "USD": return "$";
+                case "EUR": return "€";
+                case "GBP": return "£";
+                case "JPY": return "¥";
+                case "CAD": return "C$";
+                case "AUD": return "A$";
+                case "INR": return "₹";
+                default: return "$";
+            }
+        }
+
+        private string FormatMoney(decimal amount)
+        {
+            string symbol = GetCurrencySymbol(_budget != null ? _budget.Currency : "USD");
+            return $"{symbol}{amount:F2}";
+        }
+
+        private void CheckLimitAlerts()
+        {
+            try
+            {
+                if (_budget == null) return;
+
+                decimal todayTotal = _db.GetTodayTotal(_currentUser.UserId);
+                decimal weekTotal = _db.GetWeekTotal(_currentUser.UserId);
+                var messages = new List<string>();
+
+                if (_budget.DailyLimit > 0 && todayTotal > _budget.DailyLimit)
+                    messages.Add($"Daily limit exceeded! Spent {FormatMoney(todayTotal)} (Limit: {FormatMoney(_budget.DailyLimit)})");
+
+                if (_budget.WeeklyLimit > 0 && weekTotal > _budget.WeeklyLimit)
+                    messages.Add($"Weekly limit exceeded! Spent {FormatMoney(weekTotal)} (Limit: {FormatMoney(_budget.WeeklyLimit)})");
+
+                if (messages.Count > 0)
+                    MessageBox.Show(string.Join("\n", messages), "Budget Alert",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Alert error: {ex.Message}");
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (comboBox1.SelectedItem == null) return;
+                if (_budget == null) _budget = new BudgetSetting { UserId = _currentUser.UserId };
+                _budget.Currency = comboBox1.SelectedItem.ToString();
+                if (_db.GetBudgetSetting(_currentUser.UserId) == null)
+                    _db.CreateBudgetSetting(_budget);
+                else
+                    _db.UpdateBudgetSetting(_budget);
+                UpdateSummaryCards();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Currency error: {ex.Message}");
             }
         }
 
@@ -148,6 +229,9 @@ namespace StudentBudgetTracker
                 chart2.Series[0].Color = Color.DodgerBlue;
                 chart2.Series[0].MarkerStyle = MarkerStyle.Circle;
                 chart2.Series[0].MarkerSize = 6;
+
+                string symbol = GetCurrencySymbol(_budget != null ? _budget.Currency : "USD");
+                chart2.ChartAreas[0].AxisY.LabelStyle.Format = symbol + "{0:F2}";
 
                 for (int i = 6; i >= 0; i--)
                 {
@@ -274,11 +358,11 @@ namespace StudentBudgetTracker
                     if (todayTotal + expenseAmount > budget.DailyLimit)
                     {
                         decimal exceededBy = (todayTotal + expenseAmount) - budget.DailyLimit;
-                        warningMessage += $"🔴 Daily Limit Exceeded!\n" +
-                                         $"   Limit: ${budget.DailyLimit:F2}\n" +
-                                         $"   Spent today: ${todayTotal:F2}\n" +
-                                         $"   This expense: ${expenseAmount:F2}\n" +
-                                         $"   Would exceed by: ${exceededBy:F2}\n\n";
+                        warningMessage += $"Daily Limit Exceeded!\n" +
+                                         $"   Limit: {FormatMoney(budget.DailyLimit)}\n" +
+                                         $"   Spent today: {FormatMoney(todayTotal)}\n" +
+                                         $"   This expense: {FormatMoney(expenseAmount)}\n" +
+                                         $"   Would exceed by: {FormatMoney(exceededBy)}\n\n";
                     }
                 }
 
@@ -290,11 +374,11 @@ namespace StudentBudgetTracker
                     if (weekTotal + expenseAmount > budget.WeeklyLimit)
                     {
                         decimal exceededBy = (weekTotal + expenseAmount) - budget.WeeklyLimit;
-                        warningMessage += $"🔴 Weekly Limit Exceeded!\n" +
-                                         $"   Limit: ${budget.WeeklyLimit:F2}\n" +
-                                         $"   Spent this week: ${weekTotal:F2}\n" +
-                                         $"   This expense: ${expenseAmount:F2}\n" +
-                                         $"   Would exceed by: ${exceededBy:F2}\n\n";
+                        warningMessage += $"Weekly Limit Exceeded!\n" +
+                                         $"   Limit: {FormatMoney(budget.WeeklyLimit)}\n" +
+                                         $"   Spent this week: {FormatMoney(weekTotal)}\n" +
+                                         $"   This expense: {FormatMoney(expenseAmount)}\n" +
+                                         $"   Would exceed by: {FormatMoney(exceededBy)}\n\n";
                     }
                 }
 
@@ -306,11 +390,11 @@ namespace StudentBudgetTracker
                     if (monthTotal + expenseAmount > budget.MonthlyIncome)
                     {
                         decimal exceededBy = (monthTotal + expenseAmount) - budget.MonthlyIncome;
-                        warningMessage += $"🔴 Monthly Budget Exceeded!\n" +
-                                         $"   Budget: ${budget.MonthlyIncome:F2}\n" +
-                                         $"   Spent this month: ${monthTotal:F2}\n" +
-                                         $"   This expense: ${expenseAmount:F2}\n" +
-                                         $"   Would exceed by: ${exceededBy:F2}\n\n";
+                        warningMessage += $"Monthly Budget Exceeded!\n" +
+                                         $"   Budget: {FormatMoney(budget.MonthlyIncome)}\n" +
+                                         $"   Spent this month: {FormatMoney(monthTotal)}\n" +
+                                         $"   This expense: {FormatMoney(expenseAmount)}\n" +
+                                         $"   Would exceed by: {FormatMoney(exceededBy)}\n\n";
                     }
                 }
             }
@@ -388,9 +472,10 @@ namespace StudentBudgetTracker
                 _db.AddExpense(expense);
                 textBox7.Clear();
 
-                // Refresh charts and summary
+                // Refresh charts, summary and expense list
                 RefreshAllCharts();
                 UpdateSummaryCards();
+                RefreshExpenseList();
 
                 // Show success message
                 if (!string.IsNullOrEmpty(warningMessage))
@@ -516,6 +601,7 @@ namespace StudentBudgetTracker
                 textBox5.Clear();
                 textBox4.Clear();
 
+                RefreshGoalsList();
                 MessageBox.Show("Savings goal added successfully!", "Success",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -566,6 +652,7 @@ namespace StudentBudgetTracker
                 _db.AddRecurringExpense(recurring);
                 textBox6.Clear();
 
+                RefreshRecurringList();
                 MessageBox.Show("Recurring expense added successfully!", "Success",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -602,6 +689,10 @@ namespace StudentBudgetTracker
                     textBox6.Clear();
                     textBox7.Clear();
 
+                    RefreshExpenseList();
+                    RefreshGoalsList();
+                    RefreshRecurringList();
+
                     MessageBox.Show("All data has been reset successfully!", "Success",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -621,7 +712,286 @@ namespace StudentBudgetTracker
         }
 
         // ============================================================
-        // 8. DESIGNER EVENT HANDLERS - At the bottom
+        // 8. LIST PANELS (Recent Expenses, Savings Goals, Recurring)
+        // ============================================================
+        private void BuildListPanels()
+        {
+            // ---- Recent Expenses ----
+            var panelExpenses = new Panel();
+            panelExpenses.BackColor = Color.White;
+            panelExpenses.BorderStyle = BorderStyle.FixedSingle;
+            panelExpenses.Location = new Point(16, 1312);
+            panelExpenses.Size = new Size(733, 300);
+            panelExpenses.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+            var lblExpensesHeader = new Label();
+            lblExpensesHeader.Text = "Recent Expenses";
+            lblExpensesHeader.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            lblExpensesHeader.Location = new Point(12, 10);
+            lblExpensesHeader.Size = new Size(300, 20);
+
+            lstExpenses = new ListView();
+            lstExpenses.View = View.Details;
+            lstExpenses.FullRowSelect = true;
+            lstExpenses.GridLines = true;
+            lstExpenses.Location = new Point(12, 40);
+            lstExpenses.Size = new Size(705, 200);
+            lstExpenses.Columns.Add("Category", 200);
+            lstExpenses.Columns.Add("Amount", 130);
+            lstExpenses.Columns.Add("Date", 120);
+            lstExpenses.Columns.Add("Type", 90);
+
+            btnDeleteExpense = new Button();
+            btnDeleteExpense.Text = "Delete Selected";
+            btnDeleteExpense.BackColor = Color.Red;
+            btnDeleteExpense.ForeColor = Color.White;
+            btnDeleteExpense.Location = new Point(600, 258);
+            btnDeleteExpense.Size = new Size(117, 30);
+            btnDeleteExpense.Click += DeleteSelectedExpense;
+
+            panelExpenses.Controls.Add(lblExpensesHeader);
+            panelExpenses.Controls.Add(lstExpenses);
+            panelExpenses.Controls.Add(btnDeleteExpense);
+
+            // ---- Savings Goals ----
+            var panelGoals = new Panel();
+            panelGoals.BackColor = Color.White;
+            panelGoals.BorderStyle = BorderStyle.FixedSingle;
+            panelGoals.Location = new Point(16, 1622);
+            panelGoals.Size = new Size(733, 260);
+            panelGoals.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+            var lblGoalsHeader = new Label();
+            lblGoalsHeader.Text = "Savings Goals";
+            lblGoalsHeader.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            lblGoalsHeader.Location = new Point(12, 10);
+            lblGoalsHeader.Size = new Size(300, 20);
+
+            lstGoals = new ListView();
+            lstGoals.View = View.Details;
+            lstGoals.FullRowSelect = true;
+            lstGoals.GridLines = true;
+            lstGoals.Location = new Point(12, 40);
+            lstGoals.Size = new Size(705, 160);
+            lstGoals.Columns.Add("Goal Name", 160);
+            lstGoals.Columns.Add("Target", 120);
+            lstGoals.Columns.Add("Current", 120);
+            lstGoals.Columns.Add("Progress", 90);
+            lstGoals.Columns.Add("Deadline", 100);
+
+            btnDeleteGoal = new Button();
+            btnDeleteGoal.Text = "Delete Selected";
+            btnDeleteGoal.BackColor = Color.Red;
+            btnDeleteGoal.ForeColor = Color.White;
+            btnDeleteGoal.Location = new Point(600, 216);
+            btnDeleteGoal.Size = new Size(117, 30);
+            btnDeleteGoal.Click += DeleteSelectedGoal;
+
+            panelGoals.Controls.Add(lblGoalsHeader);
+            panelGoals.Controls.Add(lstGoals);
+            panelGoals.Controls.Add(btnDeleteGoal);
+
+            // ---- Recurring Expenses ----
+            var panelRecurring = new Panel();
+            panelRecurring.BackColor = Color.White;
+            panelRecurring.BorderStyle = BorderStyle.FixedSingle;
+            panelRecurring.Location = new Point(16, 1892);
+            panelRecurring.Size = new Size(733, 260);
+            panelRecurring.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+            var lblRecurringHeader = new Label();
+            lblRecurringHeader.Text = "Recurring Expenses";
+            lblRecurringHeader.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
+            lblRecurringHeader.Location = new Point(12, 10);
+            lblRecurringHeader.Size = new Size(300, 20);
+
+            lstRecurring = new ListView();
+            lstRecurring.View = View.Details;
+            lstRecurring.FullRowSelect = true;
+            lstRecurring.GridLines = true;
+            lstRecurring.Location = new Point(12, 40);
+            lstRecurring.Size = new Size(705, 160);
+            lstRecurring.Columns.Add("Category", 200);
+            lstRecurring.Columns.Add("Amount", 130);
+            lstRecurring.Columns.Add("Frequency", 110);
+            lstRecurring.Columns.Add("Start Date", 120);
+
+            btnDeleteRecurring = new Button();
+            btnDeleteRecurring.Text = "Delete Selected";
+            btnDeleteRecurring.BackColor = Color.Red;
+            btnDeleteRecurring.ForeColor = Color.White;
+            btnDeleteRecurring.Location = new Point(600, 216);
+            btnDeleteRecurring.Size = new Size(117, 30);
+            btnDeleteRecurring.Click += DeleteSelectedRecurring;
+
+            panelRecurring.Controls.Add(lblRecurringHeader);
+            panelRecurring.Controls.Add(lstRecurring);
+            panelRecurring.Controls.Add(btnDeleteRecurring);
+
+            this.Controls.Add(panelExpenses);
+            this.Controls.Add(panelGoals);
+            this.Controls.Add(panelRecurring);
+        }
+
+        private void RefreshExpenseList()
+        {
+            _expenses = _db.GetExpenses(_currentUser.UserId, 100);
+            lstExpenses.Items.Clear();
+            foreach (var exp in _expenses)
+            {
+                var item = new ListViewItem(exp.CategoryName ?? "Other");
+                item.SubItems.Add(FormatMoney(exp.Amount));
+                item.SubItems.Add(exp.ExpenseDate);
+                item.SubItems.Add(exp.IsRecurring ? "Recurring" : "One-time");
+                item.Tag = exp.ExpenseId;
+                lstExpenses.Items.Add(item);
+            }
+        }
+
+        private void RefreshGoalsList()
+        {
+            var goals = _db.GetSavingsGoals(_currentUser.UserId);
+            lstGoals.Items.Clear();
+            foreach (var goal in goals)
+            {
+                var item = new ListViewItem(goal.GoalName);
+                item.SubItems.Add(FormatMoney(goal.TargetAmount));
+                item.SubItems.Add(FormatMoney(goal.CurrentAmount));
+                item.SubItems.Add($"{goal.Progress:F0}%");
+                item.SubItems.Add(string.IsNullOrEmpty(goal.Deadline) ? "-" : goal.Deadline);
+                item.Tag = goal.GoalId;
+                lstGoals.Items.Add(item);
+            }
+        }
+
+        private void RefreshRecurringList()
+        {
+            var recurrings = _db.GetRecurringExpenses(_currentUser.UserId);
+            lstRecurring.Items.Clear();
+            foreach (var rec in recurrings)
+            {
+                var item = new ListViewItem(rec.CategoryName ?? "Other");
+                item.SubItems.Add(FormatMoney(rec.Amount));
+                item.SubItems.Add(rec.Frequency);
+                item.SubItems.Add(rec.StartDate);
+                item.Tag = rec.RecurringId;
+                lstRecurring.Items.Add(item);
+            }
+        }
+
+        private void DeleteSelectedExpense(object sender, EventArgs e)
+        {
+            if (lstExpenses.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select an expense to delete.", "Delete",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (MessageBox.Show("Delete the selected expense?", "Confirm",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _db.DeleteExpense((int)lstExpenses.SelectedItems[0].Tag);
+                RefreshExpenseList();
+                RefreshAllCharts();
+                UpdateSummaryCards();
+            }
+        }
+
+        private void DeleteSelectedGoal(object sender, EventArgs e)
+        {
+            if (lstGoals.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a savings goal to delete.", "Delete",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (MessageBox.Show("Delete the selected savings goal?", "Confirm",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _db.DeleteSavingsGoal((int)lstGoals.SelectedItems[0].Tag);
+                RefreshGoalsList();
+            }
+        }
+
+        private void DeleteSelectedRecurring(object sender, EventArgs e)
+        {
+            if (lstRecurring.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a recurring expense to delete.", "Delete",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (MessageBox.Show("Delete the selected recurring expense?", "Confirm",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _db.DeleteRecurringExpense((int)lstRecurring.SelectedItems[0].Tag);
+                RefreshRecurringList();
+            }
+        }
+
+        // ============================================================
+        // 9. RECURRING EXPENSE PROCESSING
+        // ============================================================
+        private void ProcessRecurringExpenses()
+        {
+            try
+            {
+                var recurrings = _db.GetRecurringExpenses(_currentUser.UserId);
+                string today = DateTime.Now.ToString("yyyy-MM-dd");
+                bool changed = false;
+
+                foreach (var rec in recurrings)
+                {
+                    if (!rec.IsActive) continue;
+                    if (!ShouldProcessRecurring(rec, today)) continue;
+
+                    _db.AddExpense(new Expense
+                    {
+                        UserId = _currentUser.UserId,
+                        CategoryId = rec.CategoryId,
+                        Amount = rec.Amount,
+                        ExpenseDate = today,
+                        Description = "Recurring",
+                        IsRecurring = true,
+                        RecurringId = rec.RecurringId
+                    });
+                    _db.UpdateRecurringLastProcessed(rec.RecurringId, today);
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    RefreshAllCharts();
+                    RefreshExpenseList();
+                    UpdateSummaryCards();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error processing recurring expenses: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool ShouldProcessRecurring(RecurringExpense rec, string today)
+        {
+            if (string.IsNullOrEmpty(rec.LastProcessed)) return true;
+
+            DateTime last = DateTime.Parse(rec.LastProcessed);
+            DateTime current = DateTime.Parse(today);
+            int daysDiff = (int)(current - last).TotalDays;
+
+            switch (rec.Frequency)
+            {
+                case "daily": return daysDiff >= 1;
+                case "weekly": return daysDiff >= 7;
+                case "monthly": return daysDiff >= 30;
+                default: return false;
+            }
+        }
+
+        // ============================================================
+        // 10. DESIGNER EVENT HANDLERS - At the bottom
         // ============================================================
         private void button1_Click_1(object sender, EventArgs e) { button1_Click(sender, e); }
         private void button2_Click_1(object sender, EventArgs e) { button2_Click(sender, e); }
@@ -632,5 +1002,10 @@ namespace StudentBudgetTracker
         private void label16_Click(object sender, EventArgs e) { }
         private void label17_Click(object sender, EventArgs e) { }
         private void HomePage_Load(object sender, EventArgs e) { }
+
+        private void label16_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -13,12 +13,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
@@ -102,7 +102,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label1.Location = new System.Drawing.Point(-42, 9);
+            this.label1.Location = new System.Drawing.Point(1, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(344, 26);
             this.label1.TabIndex = 0;
@@ -115,7 +115,7 @@
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.comboBox1);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(-29, 50);
+            this.panel1.Location = new System.Drawing.Point(14, 50);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(530, 54);
             this.panel1.TabIndex = 1;
@@ -165,7 +165,7 @@
             this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panel2.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.panel2.Controls.Add(this.button2);
-            this.panel2.Location = new System.Drawing.Point(500, 3);
+            this.panel2.Location = new System.Drawing.Point(543, 3);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(176, 34);
             this.panel2.TabIndex = 2;
@@ -190,7 +190,7 @@
             this.panel3.Controls.Add(this.button3);
             this.panel3.Controls.Add(this.textBox1);
             this.panel3.Controls.Add(this.label3);
-            this.panel3.Location = new System.Drawing.Point(-43, 119);
+            this.panel3.Location = new System.Drawing.Point(0, 119);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(160, 257);
             this.panel3.TabIndex = 3;
@@ -248,7 +248,7 @@
             this.panel4.Controls.Add(this.label8);
             this.panel4.Controls.Add(this.textBox2);
             this.panel4.Controls.Add(this.label4);
-            this.panel4.Location = new System.Drawing.Point(142, 119);
+            this.panel4.Location = new System.Drawing.Point(185, 119);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(160, 257);
             this.panel4.TabIndex = 4;
@@ -326,7 +326,7 @@
             this.panel5.Controls.Add(this.textBox4);
             this.panel5.Controls.Add(this.textBox5);
             this.panel5.Controls.Add(this.label11);
-            this.panel5.Location = new System.Drawing.Point(341, 119);
+            this.panel5.Location = new System.Drawing.Point(384, 119);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(160, 257);
             this.panel5.TabIndex = 4;
@@ -411,7 +411,7 @@
             this.panel6.Controls.Add(this.dateTimePicker2);
             this.panel6.Controls.Add(this.button6);
             this.panel6.Controls.Add(this.label6);
-            this.panel6.Location = new System.Drawing.Point(530, 119);
+            this.panel6.Location = new System.Drawing.Point(573, 119);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(160, 257);
             this.panel6.TabIndex = 4;
@@ -488,7 +488,7 @@
             this.panel7.Controls.Add(this.textBox7);
             this.panel7.Controls.Add(this.comboBox4);
             this.panel7.Controls.Add(this.label12);
-            this.panel7.Location = new System.Drawing.Point(-43, 382);
+            this.panel7.Location = new System.Drawing.Point(0, 382);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(733, 121);
             this.panel7.TabIndex = 5;
@@ -548,7 +548,7 @@
             this.panel8.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panel8.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.panel8.Controls.Add(this.chart1);
-            this.panel8.Location = new System.Drawing.Point(-43, 509);
+            this.panel8.Location = new System.Drawing.Point(0, 509);
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(733, 273);
             this.panel8.TabIndex = 6;
@@ -556,17 +556,17 @@
             // chart1
             // 
             this.chart1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
             this.chart1.Location = new System.Drawing.Point(276, 18);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Doughnut;
-            series1.Legend = "Legend1";
-            series1.Name = "Expenses";
-            this.chart1.Series.Add(series1);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Doughnut;
+            series3.Legend = "Legend1";
+            series3.Name = "Expenses";
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(209, 228);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "Expense by category";
@@ -576,151 +576,47 @@
             this.panel9.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.panel9.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.panel9.Controls.Add(this.chart2);
-            this.panel9.Location = new System.Drawing.Point(-43, 788);
+            this.panel9.Location = new System.Drawing.Point(0, 788);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(733, 313);
             this.panel9.TabIndex = 7;
             // 
             // chart2
             // 
-             this.chart2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-             chartArea2.AxisX.Interval = 1D;
-             chartArea2.AxisX.IsStartedFromZero = true;
-             chartArea2.AxisX.MajorGrid.Interval = 1D;
-             chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-             chartArea2.AxisX.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-             chartArea2.AxisX2.Interval = 1D;
-             chartArea2.AxisY.LabelStyle.Format = "${0:F2}";
-             chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-             chartArea2.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-             chartArea2.BorderColor = System.Drawing.Color.LightGray;
-             chartArea2.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid;
-             chartArea2.Name = "ChartArea1";
-             this.chart2.ChartAreas.Add(chartArea2);
-             legend2.Alignment = System.Drawing.StringAlignment.Center;
-             legend2.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
-             legend2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-             legend2.IsTextAutoFit = false;
-             legend2.Name = "Legend1";
-             this.chart2.Legends.Add(legend2);
-             this.chart2.Location = new System.Drawing.Point(43, 20);
-             this.chart2.Name = "chart2";
-             series2.BorderWidth = 3;
-             series2.ChartArea = "ChartArea1";
-             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-             series2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(126)))), ((int)(((byte)(234)))));
-             series2.Legend = "Legend1";
-             series2.MarkerSize = 6;
-             series2.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
-             series2.Name = "DailyExpenses";
-             this.chart2.Series.Add(series2);
-             this.chart2.Size = new System.Drawing.Size(681, 280);
-             this.chart2.TabIndex = 0;
-             this.chart2.Text = "Spending Trend (Last 7 Days)";
-
-            // chart2
-            /* this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-             chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-             legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-             series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
-
-             chartArea2.Name = "ChartArea1";
-             chartArea2.BackColor = System.Drawing.Color.White;
-             chartArea2.AxisX.Interval = 1;
-             chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-             chartArea2.AxisX.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-             chartArea2.AxisY.Minimum = 0;
-             chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-             chartArea2.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-             chartArea2.AxisY.LabelStyle.Format = "${0:F2}";
-
-             this.chart2.ChartAreas.Add(chartArea2);
-
-             legend2.Name = "Legend1";
-             this.chart2.Legends.Add(legend2);
-
-             series2.ChartArea = "ChartArea1";
-             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-             series2.Legend = "Legend1";
-             series2.Name = "DailyExpenses";
-             series2.BorderWidth = 3;
-             series2.Color = System.Drawing.Color.FromArgb(102, 126, 234);
-             series2.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
-             series2.MarkerSize = 6;
-             series2.MarkerColor = System.Drawing.Color.FromArgb(102, 126, 234);
-             this.chart2.Series.Add(series2);
-
-             this.chart2.Location = new System.Drawing.Point(43, 20);
-             this.chart2.Name = "chart2";
-             this.chart2.Size = new System.Drawing.Size(681, 280);
-             this.chart2.TabIndex = 0;
-             this.chart2.Text = "Spending Trend (Last 7 Days)";
-             this.chart2.Click += new System.EventHandler(this.chart2_Click);
-             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();*/
-
-
-            // ============================================================
-            // CHART 2 - SPLINE CHART (Spending Trend)
-            // ============================================================
-
-            // chart2
-           /* this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();*/
-            chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
-
-            // ---------- CHART AREA ----------
-            /*chartArea2.Name = "ChartArea1";
-            chartArea2.BackColor = System.Drawing.Color.White;
-            chartArea2.BorderColor = System.Drawing.Color.LightGray;
-            chartArea2.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid;*/
-
-            // X-Axis Settings
-            chartArea2.AxisX.Interval = 1;                    // ← Shows every day label
-            chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisX.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-            chartArea2.AxisX.Title = "Day";
-
-            // Y-Axis Settings
-            chartArea2.AxisY.Minimum = 0;                    // ← Chart starts at zero
-            chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-            chartArea2.AxisY.LabelStyle.Format = "${0:F2}";  // ← Currency format
-            chartArea2.AxisY.Title = "Amount ($)";
-
-            this.chart2.ChartAreas.Add(chartArea2);
-
-            /*// ---------- LEGEND ----------
-            legend2.Name = "Legend1";
-            legend2.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
-            legend2.Alignment = System.Drawing.StringAlignment.Center;
-            legend2.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.chart2.Legends.Add(legend2);*/
-
-           /* // ---------- SERIES (Data) ----------
-            series2.ChartArea = "ChartArea1";                // ← MUST match chartArea2.Name
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;  // ← Spline
-            series2.Legend = "Legend1";
-            //series2.Name = "DailyExpenses";
-            series2.BorderWidth = 3;
-            series2.Color = System.Drawing.Color.FromArgb(102, 126, 234);
-            series2.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
-            series2.MarkerSize = 6;
-            series2.MarkerColor = System.Drawing.Color.FromArgb(102, 126, 234);
-            series2.IsValueShownAsLabel = false;
-            this.chart2.Series.Add(series2);*/
-
+            this.chart2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            chartArea4.AxisX.Interval = 1D;
+            chartArea4.AxisX.MajorGrid.Interval = 1D;
+            chartArea4.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea4.AxisX.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
+            chartArea4.AxisX2.Interval = 1D;
+            chartArea4.AxisY.LabelStyle.Format = "${0:F2}";
+            chartArea4.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea4.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
+            chartArea4.BorderColor = System.Drawing.Color.LightGray;
+            chartArea4.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid;
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
+            legend4.Alignment = System.Drawing.StringAlignment.Center;
+            legend4.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Top;
+            legend4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            legend4.IsTextAutoFit = false;
+            legend4.Name = "Legend1";
+            this.chart2.Legends.Add(legend4);
             this.chart2.Location = new System.Drawing.Point(43, 20);
             this.chart2.Name = "chart2";
+            series4.BorderWidth = 3;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.Color = System.Drawing.Color.FromArgb(((int)(((byte)(102)))), ((int)(((byte)(126)))), ((int)(((byte)(234)))));
+            series4.Legend = "Legend1";
+            series4.MarkerSize = 6;
+            series4.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
+            series4.Name = "DailyExpenses";
+            this.chart2.Series.Add(series4);
             this.chart2.Size = new System.Drawing.Size(550, 230);
             this.chart2.TabIndex = 0;
             this.chart2.Text = "Spending Trend (Last 7 Days)";
             this.chart2.Click += new System.EventHandler(this.chart2_Click);
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
-
-
             // 
             // panel10
             // 
@@ -731,7 +627,7 @@
             this.panel10.Controls.Add(this.panel12);
             this.panel10.Controls.Add(this.panel11);
             this.panel10.Controls.Add(this.label13);
-            this.panel10.Location = new System.Drawing.Point(-43, 1117);
+            this.panel10.Location = new System.Drawing.Point(0, 1117);
             this.panel10.Name = "panel10";
             this.panel10.Size = new System.Drawing.Size(733, 189);
             this.panel10.TabIndex = 8;
@@ -749,11 +645,11 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.label21.ForeColor = System.Drawing.Color.Black;
-            this.label21.Location = new System.Drawing.Point(43, 46);
+            this.label21.Location = new System.Drawing.Point(3, 53);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(49, 24);
+            this.label21.Size = new System.Drawing.Size(40, 17);
             this.label21.TabIndex = 5;
             this.label21.Text = "0.00";
             // 
@@ -782,11 +678,11 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.label17.ForeColor = System.Drawing.Color.Black;
-            this.label17.Location = new System.Drawing.Point(43, 46);
+            this.label17.Location = new System.Drawing.Point(3, 53);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(49, 24);
+            this.label17.Size = new System.Drawing.Size(40, 17);
             this.label17.TabIndex = 6;
             this.label17.Text = "0.00";
             // 
@@ -815,11 +711,11 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.label15.ForeColor = System.Drawing.Color.Black;
-            this.label15.Location = new System.Drawing.Point(40, 46);
+            this.label15.Location = new System.Drawing.Point(5, 53);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(49, 24);
+            this.label15.Size = new System.Drawing.Size(40, 17);
             this.label15.TabIndex = 5;
             this.label15.Text = "0.00";
             // 
@@ -848,13 +744,14 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.label16.ForeColor = System.Drawing.Color.Black;
-            this.label16.Location = new System.Drawing.Point(41, 53);
+            this.label16.Location = new System.Drawing.Point(3, 53);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(49, 24);
+            this.label16.Size = new System.Drawing.Size(40, 17);
             this.label16.TabIndex = 4;
             this.label16.Text = "0.00";
+            this.label16.Click += new System.EventHandler(this.label16_Click_1);
             // 
             // label14
             // 
@@ -891,7 +788,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.ClientSize = new System.Drawing.Size(851, 749);
+            this.ClientSize = new System.Drawing.Size(1021, 749);
             this.Controls.Add(this.panel10);
             this.Controls.Add(this.panel9);
             this.Controls.Add(this.panel8);
